@@ -32,5 +32,6 @@ namespace InteriorShop.Domain.Entities
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public ICollection<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
+        public ICollection<OptionGroup> OptionsGroups { get; set; } = new List<OptionGroup>();
     }
 }
