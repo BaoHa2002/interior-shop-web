@@ -8,7 +8,7 @@ namespace InteriorShop.Domain.Entities
         public string Slug { get; set; } = default!;
 
         //Quan hệ cha/con
-        public long? ParentId { get; set; }
+        public Guid? ParentId { get; set; }
         public Category? Parent { get; set; }
         public ICollection<Category> Children { get; set; } = new List<Category>();
 

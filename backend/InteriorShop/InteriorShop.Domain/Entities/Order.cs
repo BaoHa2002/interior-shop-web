@@ -1,10 +1,5 @@
 ﻿using InteriorShop.Domain.Common;
 using InteriorShop.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InteriorShop.Domain.Entities
 {
@@ -38,5 +33,7 @@ namespace InteriorShop.Domain.Entities
         public string? BankName { get; set; }
         public string? BankAccountNumber { get; set; }
         public string? TransferContent { get; set; }
+
+        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
 }

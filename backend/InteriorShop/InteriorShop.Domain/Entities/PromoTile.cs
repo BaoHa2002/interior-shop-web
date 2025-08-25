@@ -1,13 +1,8 @@
 ﻿using InteriorShop.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InteriorShop.Domain.Entities
 {
-    public class PromoTitle : BaseEntity
+    public class PromoTile : BaseEntity
     {
         public string ImageUrl { get; set; } = default!;
         public string? AltText { get; set; }
