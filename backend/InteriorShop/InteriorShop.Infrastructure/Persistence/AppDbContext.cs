@@ -106,7 +106,7 @@ namespace InteriorShop.Infrastructure.Persistence
                 e.Property(x => x.Total).HasPrecision(18, 2);
 
                 // Nếu trong Order có ICollection<OrderItem> Items:
-                e.HasMany(x => x.Items)
+                e.HasMany<OrderItem>()
                  .WithOne(i => i.Order)
                  .HasForeignKey(i => i.OrderId);
             });
@@ -139,26 +139,6 @@ namespace InteriorShop.Infrastructure.Persistence
             b.Entity<SiteSetting>(e =>
             {
                 e.Property(x => x.DefaultShippingFee).HasPrecision(18, 2);
-
-                e.HasData(new SiteSetting
-                {
-                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), // dùng GUID cố định
-                    SiteName = "PhatDecors",
-                    Hotline = "0364 988 789",
-                    ShowroomAddress = "Tổ 2 , Khu phố 3 , Phường Trảng Dài, Biên Hòa, Đồng Nai",
-                    DefaultShippingFee = 0,
-                    LogoUrl = "/images/logo.png",
-                    FaviconUrl = "/favicon.ico",
-                    ContactEmail = "",       // để trống - admin cập nhật sau
-                    BankAccountName = "",
-                    BankName = "",
-                    BankAccountNumber = "",
-                    SmtpHost = "",
-                    SmtpPort = null,
-                    SmtpUser = "",
-                    SmtpPassword = "",
-                    SmtpFromEmail = ""
-                });
             });
         }
     }

@@ -1,5 +1,6 @@
 ﻿using InteriorShop.Infrastructure.Identity;
 using InteriorShop.Infrastructure.Persistence;
+using InteriorShop.Infrastructure.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,7 +20,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -35,7 +36,43 @@ builder.Services.AddAuthentication()
 // ===== Controllers =====
 builder.Services.AddControllers();
 
+// ===== Swagger (tùy chọn, nếu muốn test API dễ hơn) =====
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+// ===== Apply migrations + seed dữ liệu =====
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+        var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleMgr = services.GetRequiredService<RoleManager<ApplicationRole>>();
+
+        await DbSeeder.SeederAsync(db, userMgr, roleMgr);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
+
+// ===== Middleware =====
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

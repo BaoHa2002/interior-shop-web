@@ -393,6 +393,7 @@ namespace InteriorShop.Infrastructure.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     LineTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    OrderId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -405,6 +406,11 @@ namespace InteriorShop.Infrastructure.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId1",
+                        column: x => x.OrderId1,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -524,11 +530,6 @@ namespace InteriorShop.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "SiteSettings",
-                columns: new[] { "Id", "BankAccountName", "BankAccountNumber", "BankName", "ContactEmail", "CreatedAt", "DefaultShippingFee", "FaviconUrl", "Hotline", "LogoUrl", "ShowroomAddress", "SiteName", "SmtpFromEmail", "SmtpHost", "SmtpPassword", "SmtpPort", "SmtpUser", "UpdatedAt" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), "", "", "", "", new DateTime(2025, 8, 25, 21, 55, 50, 652, DateTimeKind.Local).AddTicks(4675), 0m, "/favicon.ico", "0364 988 789", "/images/logo.png", "Tổ 2 , Khu phố 3 , Phường Trảng Dài, Biên Hòa, Đồng Nai", "PhatDecors", "", "", "", null, "", null });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -604,6 +605,11 @@ namespace InteriorShop.Infrastructure.Migrations
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId1",
+                table: "OrderItems",
+                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_Code",

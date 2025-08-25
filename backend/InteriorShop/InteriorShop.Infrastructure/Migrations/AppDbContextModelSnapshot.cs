@@ -374,6 +374,9 @@ namespace InteriorShop.Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OrderId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
@@ -403,6 +406,8 @@ namespace InteriorShop.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderId1");
 
                     b.ToTable("OrderItems");
                 });
@@ -712,27 +717,6 @@ namespace InteriorShop.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SiteSettings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            BankAccountName = "",
-                            BankAccountNumber = "",
-                            BankName = "",
-                            ContactEmail = "",
-                            CreatedAt = new DateTime(2025, 8, 25, 21, 55, 50, 652, DateTimeKind.Local).AddTicks(4675),
-                            DefaultShippingFee = 0m,
-                            FaviconUrl = "/favicon.ico",
-                            Hotline = "0364 988 789",
-                            LogoUrl = "/images/logo.png",
-                            ShowroomAddress = "Tổ 2 , Khu phố 3 , Phường Trảng Dài, Biên Hòa, Đồng Nai",
-                            SiteName = "PhatDecors",
-                            SmtpFromEmail = "",
-                            SmtpHost = "",
-                            SmtpPassword = "",
-                            SmtpUser = ""
-                        });
                 });
 
             modelBuilder.Entity("InteriorShop.Infrastructure.Identity.ApplicationRole", b =>
@@ -999,10 +983,14 @@ namespace InteriorShop.Infrastructure.Migrations
             modelBuilder.Entity("InteriorShop.Domain.Entities.OrderItem", b =>
                 {
                     b.HasOne("InteriorShop.Domain.Entities.Order", "Order")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("InteriorShop.Domain.Entities.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId1");
 
                     b.Navigation("Order");
                 });

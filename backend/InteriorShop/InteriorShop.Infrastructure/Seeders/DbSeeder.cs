@@ -55,11 +55,20 @@ namespace InteriorShop.Infrastructure.Seeders
                     DefaultShippingFee = 0,
                     LogoUrl = "/images/logo.png",
                     FaviconUrl = "/favicon.ico",
-                    ContactEmail = ""
-                    // các field Bank, SMTP để trống cho admin nhập sau
+                    ContactEmail = "",
+                    BankAccountName = "",
+                    BankName = "",
+                    BankAccountNumber = "",
+                    SmtpHost = "",
+                    SmtpPort = 0,
+                    SmtpUser = "",
+                    SmtpPassword = "",
+                    SmtpFromEmail = "",
+                    CreatedAt = DateTime.UtcNow
                 });
                 await db.SaveChangesAsync();
             }
+
         }
     }
 }
