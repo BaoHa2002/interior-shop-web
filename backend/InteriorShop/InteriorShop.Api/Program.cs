@@ -1,6 +1,8 @@
-﻿using InteriorShop.Infrastructure.Identity;
+﻿using InteriorShop.Application.Interfaces;
+using InteriorShop.Infrastructure.Identity;
 using InteriorShop.Infrastructure.Persistence;
 using InteriorShop.Infrastructure.Seeders;
+using InteriorShop.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +41,9 @@ builder.Services.AddControllers();
 // ===== Swagger (tùy chọn, nếu muốn test API dễ hơn) =====
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
