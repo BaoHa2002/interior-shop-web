@@ -106,9 +106,10 @@ namespace InteriorShop.Infrastructure.Persistence
                 e.Property(x => x.Total).HasPrecision(18, 2);
 
                 // Nếu trong Order có ICollection<OrderItem> Items:
-                e.HasMany<OrderItem>()
+                e.HasMany(x => x.Items)
                  .WithOne(i => i.Order)
-                 .HasForeignKey(i => i.OrderId);
+                 .HasForeignKey(i => i.OrderId)
+                 .OnDelete(DeleteBehavior.Cascade); // Nếu xóa Order thì xóa luôn OrderItems
             });
 
             // ===== ORDER ITEM =====

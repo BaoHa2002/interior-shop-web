@@ -32,7 +32,7 @@ namespace InteriorShop.Infrastructure.Seeders
                     Email = "admin@phatdecors.local",
                     EmailConfirmed = true,
                     FullName = "Administrator",
-                    PhoneNumber = "0123456789"
+                    PhoneNumber = "0364 988 789"
                 };
 
                 // tạo user với mật khẩu tạm

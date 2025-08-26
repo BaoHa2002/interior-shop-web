@@ -374,9 +374,6 @@ namespace InteriorShop.Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrderId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
@@ -406,8 +403,6 @@ namespace InteriorShop.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderId1");
 
                     b.ToTable("OrderItems");
                 });
@@ -983,14 +978,10 @@ namespace InteriorShop.Infrastructure.Migrations
             modelBuilder.Entity("InteriorShop.Domain.Entities.OrderItem", b =>
                 {
                     b.HasOne("InteriorShop.Domain.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("InteriorShop.Domain.Entities.Order", null)
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId1");
 
                     b.Navigation("Order");
                 });
