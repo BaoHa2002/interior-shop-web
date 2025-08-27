@@ -105,11 +105,10 @@ namespace InteriorShop.Infrastructure.Persistence
                 e.Property(x => x.ShippingFee).HasPrecision(18, 2);
                 e.Property(x => x.Total).HasPrecision(18, 2);
 
-                // Nếu trong Order có ICollection<OrderItem> Items:
                 e.HasMany(x => x.Items)
                  .WithOne(i => i.Order)
                  .HasForeignKey(i => i.OrderId)
-                 .OnDelete(DeleteBehavior.Cascade); // Nếu xóa Order thì xóa luôn OrderItems
+                 .OnDelete(DeleteBehavior.Cascade); // Xoá Order sẽ xoá luôn Items
             });
 
             // ===== ORDER ITEM =====
@@ -117,6 +116,18 @@ namespace InteriorShop.Infrastructure.Persistence
             {
                 e.Property(x => x.UnitPrice).HasPrecision(18, 2);
                 e.Property(x => x.LineTotal).HasPrecision(18, 2);
+
+                // OrderItem -> Product (bắt buộc)
+                e.HasOne(i => i.Product)
+                 .WithMany()
+                 .HasForeignKey(i => i.ProductId)
+                 .OnDelete(DeleteBehavior.Restrict); // Không cho xoá Product nếu còn OrderItem
+
+                // OrderItem -> ProductVariant (tuỳ chọn, có thể null)
+                e.HasOne(i => i.ProductVariant)
+                 .WithMany()
+                 .HasForeignKey(i => i.ProductVariantId)
+                 .OnDelete(DeleteBehavior.Restrict); // Không cho xoá Variant nếu còn OrderItem
             });
 
             // ===== BLOG POST =====

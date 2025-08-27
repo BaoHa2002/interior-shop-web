@@ -16,6 +16,8 @@ namespace InteriorShop.Domain.Entities
         // Giá & kho
         public decimal Price { get; set; }
         public decimal? SalePrice { get; set; }
+        public int? Stock { get; set; }
+
         public bool IsActive { get; set; } = true;
         public bool IsFeatured { get; set; } = false;
 
