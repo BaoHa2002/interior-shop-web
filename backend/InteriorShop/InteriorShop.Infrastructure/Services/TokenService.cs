@@ -1,4 +1,4 @@
-﻿using InteriorShop.Application.DTOs;
+﻿using InteriorShop.Application.DTOs.Auth;
 using InteriorShop.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

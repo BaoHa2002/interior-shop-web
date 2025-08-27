@@ -1,4 +1,4 @@
-﻿using InteriorShop.Application.DTOs;
+﻿using InteriorShop.Application.DTOs.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;

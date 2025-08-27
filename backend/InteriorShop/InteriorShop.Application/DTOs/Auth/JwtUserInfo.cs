@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InteriorShop.Application.DTOs
+namespace InteriorShop.Application.DTOs.Auth
 {
     public class JwtUserInfo
     {

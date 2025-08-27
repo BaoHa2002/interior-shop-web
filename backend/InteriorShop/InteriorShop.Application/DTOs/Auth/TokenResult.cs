@@ -1,4 +1,4 @@
-﻿namespace InteriorShop.Application.DTOs
+﻿namespace InteriorShop.Application.DTOs.Auth
 {
     public class TokenResult
     {
