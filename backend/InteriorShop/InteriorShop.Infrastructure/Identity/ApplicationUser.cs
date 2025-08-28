@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InteriorShop.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace InteriorShop.Infrastructure.Identity
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>, IAppUser
     {
         public string FullName { get; set; } = default!;
 

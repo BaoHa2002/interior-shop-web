@@ -21,6 +21,6 @@ namespace InteriorShop.Application.Requests.Orders
 
         // Payment & Items
         public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.COD;
-        public List<OrderItemRequest> Items { get; set; } = new();
+        public List<OrderItemCreateRequest> Items { get; set; } = new();
     }
 }
