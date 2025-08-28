@@ -1,8 +1,10 @@
-﻿using InteriorShop.Application.Interfaces;
+﻿using InteriorShop.Api.Middlewares;
+using InteriorShop.Application.Interfaces;
 using InteriorShop.Infrastructure.Identity;
 using InteriorShop.Infrastructure.Persistence;
 using InteriorShop.Infrastructure.Seeders;
 using InteriorShop.Infrastructure.Services;
+using InteriorShop.Infrastructure.Storage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -31,7 +33,8 @@ builder.Services.AddAuthentication()
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
         };
     });
 
@@ -44,6 +47,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IFileStorage, FileStorageLocal>();
 
 var app = builder.Build();
 
@@ -76,6 +80,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseErrorHandlingMiddleware();
 app.UseAuthorization();
 
 app.MapControllers();

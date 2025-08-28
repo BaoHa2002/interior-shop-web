@@ -1,4 +1,4 @@
-namespace InteriorShop.Application.DTOs.Common
+namespace InteriorShop.Application.Common
 {
     public class ApiResponse<T>
     {
