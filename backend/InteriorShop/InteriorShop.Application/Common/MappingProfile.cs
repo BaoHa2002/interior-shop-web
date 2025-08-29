@@ -38,6 +38,8 @@ namespace InteriorShop.Application.Common
             CreateMap<ProductVariant, ProductVariantDto>().ReverseMap();
             CreateMap<Product, CartProductDto>().ReverseMap();
 
+            CreateMap<ProductCreateRequest, Product>();
+            CreateMap<ProductUpdateRequest, Product>();
             CreateMap<ProductQueryRequest, Product>();
 
             // ===== OPTION =====
