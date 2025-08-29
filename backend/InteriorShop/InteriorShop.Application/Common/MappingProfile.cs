@@ -12,6 +12,7 @@ using InteriorShop.Application.Requests.Auth;
 using InteriorShop.Application.Requests.Banners;
 using InteriorShop.Application.Requests.Categories;
 using InteriorShop.Application.Requests.Content;
+using InteriorShop.Application.Requests.Options;
 using InteriorShop.Application.Requests.Orders;
 using InteriorShop.Application.Requests.Products;
 using InteriorShop.Application.Requests.Settings;
@@ -45,6 +46,11 @@ namespace InteriorShop.Application.Common
             // ===== OPTION =====
             CreateMap<OptionGroup, OptionGroupDto>().ReverseMap();
             CreateMap<OptionValue, OptionValueDto>().ReverseMap();
+
+            CreateMap<OptionGroupCreateRequest, OptionGroup>();
+            CreateMap<OptionGroupUpdateRequest, OptionGroup>();
+            CreateMap<OptionValueCreateRequest, OptionValue>();
+            CreateMap<OptionValueUpdateRequest, OptionValue>();
 
             // ===== ORDER =====
             CreateMap<Order, OrderDto>().ReverseMap();
