@@ -25,6 +25,9 @@ namespace InteriorShop.Infrastructure.Persistence
         // Content
         public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
 
+        //Contact
+        public DbSet<Contact> Contacts => Set<Contact>();
+
         // Orders
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
@@ -45,6 +48,31 @@ namespace InteriorShop.Infrastructure.Persistence
                  .WithMany(x => x.Children)
                  .HasForeignKey(x => x.ParentId)
                  .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ===== CONTACT =====
+            b.Entity<Contact>(e =>
+            {
+                e.ToTable("Contacts"); // đặt tên table rõ ràng
+
+                e.HasKey(c => c.Id); // Id từ BaseEntity
+
+                e.Property(c => c.FullName)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                e.Property(c => c.Email)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                e.Property(c => c.Phone)
+                    .HasMaxLength(20);
+
+                e.Property(c => c.Message)
+                    .IsRequired()
+                    .HasMaxLength(1000); // giới hạn độ dài message, tránh dữ liệu quá lớn
+
+                e.HasIndex(c => c.Email); // có thể tạo index nếu cần tìm kiếm theo email
             });
 
             // ===== PRODUCT =====

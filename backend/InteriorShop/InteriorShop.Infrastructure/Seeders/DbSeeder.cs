@@ -28,6 +28,7 @@ namespace InteriorShop.Infrastructure.Seeders
             {
                 var admin = new ApplicationUser
                 {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     UserName = "admin@phatdecors.local",
                     Email = "admin@phatdecors.local",
                     EmailConfirmed = true,

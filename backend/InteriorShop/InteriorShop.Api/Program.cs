@@ -1,5 +1,4 @@
-﻿using InteriorShop.Api.Middlewares;
-using InteriorShop.Application.Interfaces;
+﻿using InteriorShop.Application.Interfaces;
 using InteriorShop.Infrastructure.Identity;
 using InteriorShop.Infrastructure.Persistence;
 using InteriorShop.Infrastructure.Seeders;
@@ -8,24 +7,26 @@ using InteriorShop.Infrastructure.Storage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ===== DB Context =====
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// DB
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAutoMapper(
-    typeof(InteriorShop.Application.Common.MappingProfile).Assembly,
-    typeof(InteriorShop.Infrastructure.Common.IdentityMapperProfile).Assembly
-);
-
-// ===== Identity =====
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+// Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+})
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// ===== Authentication với JWT =====
+// JWT
+var key = builder.Configuration["Jwt:Key"] ?? throw new Exception("Jwt:Key missing");
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
@@ -37,57 +38,46 @@ builder.Services.AddAuthentication()
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-            )
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
     });
 
-// ===== Controllers =====
-builder.Services.AddControllers();
+// AutoMapper: load all assemblies (or specify your infra assembly)
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// ===== Swagger (tùy chọn, nếu muốn test API dễ hơn) =====
+// DI services
+builder.Services.AddScoped<IFileStorage, FileStorageLocal>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IFileStorage, FileStorageLocal>();
-
 var app = builder.Build();
 
-// ===== Apply migrations + seed dữ liệu =====
+// apply migrations + seed
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    try
-    {
-        var db = services.GetRequiredService<AppDbContext>();
-        var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleMgr = services.GetRequiredService<RoleManager<ApplicationRole>>();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-        await DbSeeder.SeederAsync(db, userMgr, roleMgr);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
-    }
+    // Migrate
+    db.Database.Migrate();
+
+    // call your seeder (async)
+    await DbSeeder.SeederAsync(db, userMgr, roleMgr);
 }
 
-// ===== Middleware =====
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthentication();
-app.UseErrorHandlingMiddleware();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

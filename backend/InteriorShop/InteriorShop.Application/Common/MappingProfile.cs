@@ -2,6 +2,7 @@
 using InteriorShop.Application.DTOs.Auth;
 using InteriorShop.Application.DTOs.Banners;
 using InteriorShop.Application.DTOs.Category;
+using InteriorShop.Application.DTOs.Contact;
 using InteriorShop.Application.DTOs.Content;
 using InteriorShop.Application.DTOs.Option;
 using InteriorShop.Application.DTOs.Orders;
@@ -11,6 +12,7 @@ using InteriorShop.Application.DTOs.Users;
 using InteriorShop.Application.Requests.Auth;
 using InteriorShop.Application.Requests.Banners;
 using InteriorShop.Application.Requests.Categories;
+using InteriorShop.Application.Requests.Contact;
 using InteriorShop.Application.Requests.Content;
 using InteriorShop.Application.Requests.Options;
 using InteriorShop.Application.Requests.Orders;
@@ -33,6 +35,10 @@ namespace InteriorShop.Application.Common
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<CategoryCreateRequest, Category>();
             CreateMap<CategoryUpdateRequest, Category>();
+
+            // ===== CONTACTS =====
+            CreateMap<Contact, ContactDto>().ReverseMap();
+            CreateMap<ContactCreateRequest, Contact>();
 
             // ===== PRODUCT =====
             CreateMap<Product, ProductDto>()
