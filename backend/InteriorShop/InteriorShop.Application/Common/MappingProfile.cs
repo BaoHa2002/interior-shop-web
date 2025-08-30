@@ -35,13 +35,25 @@ namespace InteriorShop.Application.Common
             CreateMap<CategoryUpdateRequest, Category>();
 
             // ===== PRODUCT =====
-            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Product, ProductDto>()
+                // map danh sách URL ảnh
+                .ForMember(dest => dest.ImageUrls,
+                    opt => opt.MapFrom(src => src.Images.Select(i => i.Url)))
+
+                // map danh sách CategoryId
+                .ForMember(dest => dest.CategoryIds,
+                    opt => opt.MapFrom(src => src.Categories.Select(c => c.Id)))
+
+                .ReverseMap();
+
             CreateMap<ProductVariant, ProductVariantDto>().ReverseMap();
+
             CreateMap<Product, CartProductDto>().ReverseMap();
 
             CreateMap<ProductCreateRequest, Product>();
             CreateMap<ProductUpdateRequest, Product>();
-            CreateMap<ProductQueryRequest, Product>();
+            // ProductQueryRequest là request filter, không cần map sang entity Product
+
 
             // ===== OPTION =====
             CreateMap<OptionGroup, OptionGroupDto>().ReverseMap();

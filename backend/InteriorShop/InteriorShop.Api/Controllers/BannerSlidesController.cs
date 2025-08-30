@@ -40,6 +40,17 @@ namespace InteriorShop.Api.Controllers
             return ApiResponse<BannerDto>.Ok(_mapper.Map<BannerDto>(banner));
         }
 
+        [HttpGet("active")]
+        public async Task<ActionResult<ApiResponse<List<BannerDto>>>> GetActive()
+        {
+            var list = await _db.BannerSlides
+                .Where(x => x.IsActive)
+                .OrderBy(x => x.SortOrder)
+                .ToListAsync();
+
+            return ApiResponse<List<BannerDto>>.Ok(_mapper.Map<List<BannerDto>>(list));
+        }
+
         // CREATE
         [HttpPost]
         public async Task<ActionResult<ApiResponse<BannerDto>>> Create([FromBody] BannerCreateRequest request)

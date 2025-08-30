@@ -25,20 +25,28 @@ namespace InteriorShop.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponse<PagedResult<ProductDto>>>> GetAll([FromQuery] ProductQueryRequest req)
         {
-            var query = _db.Products.Include(p => p.Images).AsQueryable();
+            var query = _db.Products
+                .Include(p => p.Images)
+                .Include(p => p.Categories)
+                .AsQueryable();
 
+            // Keyword
             if (!string.IsNullOrEmpty(req.Keyword))
                 query = query.Where(p => p.Name.Contains(req.Keyword));
 
-            if (req.CategoryId.HasValue)
-                query = query.Where(p => p.Categories.Any(c => c.Id == req.CategoryId));
+            // CategoryIds (nhiều danh mục)
+            if (req.CategoryIds != null && req.CategoryIds.Any())
+                query = query.Where(p => p.Categories.Any(c => req.CategoryIds.Contains(c.Id)));
 
+            // IsActive
             if (req.IsActive.HasValue)
                 query = query.Where(p => p.IsActive == req.IsActive);
 
+            // IsFeatured
             if (req.IsFeatured.HasValue)
                 query = query.Where(p => p.IsFeatured == req.IsFeatured);
 
+            // MinPrice - MaxPrice
             if (req.MinPrice.HasValue)
                 query = query.Where(p => p.Price >= req.MinPrice.Value);
 
@@ -56,6 +64,7 @@ namespace InteriorShop.Api.Controllers
                 _ => query.OrderByDescending(p => p.CreatedAt)
             };
 
+            // Paging
             var total = await query.CountAsync();
             var items = await query.Skip((req.Page - 1) * req.PageSize)
                                    .Take(req.PageSize)
@@ -74,7 +83,7 @@ namespace InteriorShop.Api.Controllers
         public async Task<ActionResult<ApiResponse<ProductDto>>> GetById(Guid id)
         {
             var product = await _db.Products
-                .Include(p => p.Id)
+                .Include(p => p.Images)
                 .Include(p => p.Variants)
                 .Include(p => p.OptionsGroups)
                     .ThenInclude(g => g.Values)
@@ -85,6 +94,7 @@ namespace InteriorShop.Api.Controllers
 
             return ApiResponse<ProductDto>.Ok(_mapper.Map<ProductDto>(product));
         }
+
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<ProductDto>>> Create([FromBody] ProductCreateRequest req)

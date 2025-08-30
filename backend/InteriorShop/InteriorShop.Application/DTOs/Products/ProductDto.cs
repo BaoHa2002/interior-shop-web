@@ -27,5 +27,6 @@ namespace InteriorShop.Application.DTOs.Products
         public List<string> ImageUrls { get; set; } = new();
         public List<ProductVariantDto> Variant { get; set; } = new();
         public List<OptionGroupDto> OptionGroups { get; set; } = new();
+        public List<Guid> CategoryIds { get; set; } = new();
     }
 }

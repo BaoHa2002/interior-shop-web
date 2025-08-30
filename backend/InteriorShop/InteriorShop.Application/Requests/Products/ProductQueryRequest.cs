@@ -8,7 +8,7 @@ namespace InteriorShop.Application.Requests.Products
 
         // Filters
         public string? Keyword { get; set; }
-        public Guid? CategoryId { get; set; }
+        public List<Guid>? CategoryIds { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsFeatured { get; set; }
         public decimal? MinPrice { get; set; }
